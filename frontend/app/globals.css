@@ -1,0 +1,105 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500&family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@theme inline {
+  --font-sans: "Inter", sans-serif;
+  --font-mono: "DM Mono", monospace;
+  --font-serif: "Instrument Serif", serif;
+
+  /* SENTINEL color system */
+  --color-bg: #080A0C;
+  --color-bg-panel: #0D1117;
+  --color-bg-secondary: #111820;
+  --color-safe: #00C896;
+  --color-safe-dim: rgba(0, 200, 150, 0.12);
+  --color-warning: #F5A623;
+  --color-critical: #E53E3E;
+  --color-neutral: #4A5568;
+  --color-border: #1E2530;
+  --color-text-primary: #E8EDF3;
+  --color-text-muted: #8892A4;
+}
+
+:root {
+  --bg: #080A0C;
+  --bg-panel: #0D1117;
+  --safe: #00C896;
+  --safe-glow: rgba(0, 200, 150, 0.4);
+  --warning: #F5A623;
+  --critical: #E53E3E;
+  --border: #1E2530;
+  --text-primary: #E8EDF3;
+  --text-muted: #8892A4;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+}
+
+/* Scanline overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.025) 2px,
+    rgba(0,0,0,0.025) 4px
+  );
+  pointer-events: none;
+  z-index: 9998;
+}
+
+@keyframes nodeBreath {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 4px var(--safe), 0 0 12px var(--safe-glow); }
+  50% { box-shadow: 0 0 10px var(--safe), 0 0 30px var(--safe-glow), 0 0 60px rgba(0,200,150,0.15); }
+}
+
+@keyframes fadeUp {
+  from { transform: translateY(24px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes scanline {
+  from { transform: translateY(-100vh); }
+  to { transform: translateY(100vh); }
+}
+
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--safe);
+  animation: blink 1.2s ease-in-out infinite;
+  box-shadow: 0 0 6px var(--safe-glow);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.sentinel-glow {
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+.fade-up {
+  animation: fadeUp 0.7s ease forwards;
+}
