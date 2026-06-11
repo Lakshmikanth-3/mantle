@@ -1,0 +1,487 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ─── CSS Custom Properties ─────────────────────────────────────────────── */
+:root {
+  --bg: #080A0C;
+  --bg-panel: #0D1117;
+  --bg-secondary: #111820;
+  --safe: #00C896;
+  --safe-dim: rgba(0, 200, 150, 0.15);
+  --safe-glow: rgba(0, 200, 150, 0.4);
+  --warning: #F5A623;
+  --warning-dim: rgba(245, 166, 35, 0.15);
+  --warning-glow: rgba(245, 166, 35, 0.4);
+  --critical: #E53E3E;
+  --critical-dim: rgba(229, 62, 62, 0.15);
+  --critical-glow: rgba(229, 62, 62, 0.4);
+  --neutral: #4A5568;
+  --border: #1E2530;
+  --border-active: #2A3545;
+  --text-primary: #E8EDF3;
+  --text-muted: #8892A4;
+  --text-data: 'DM Mono', monospace;
+  --text-prose: 'Instrument Serif', serif;
+  --text-ui: 'Inter', sans-serif;
+  --panel-radius: 2px;
+  --transition-fast: 150ms ease;
+  --transition-normal: 300ms ease;
+  --transition-slow: 600ms ease;
+}
+
+/* ─── Keyframe Animations ────────────────────────────────────────────────── */
+
+/* Node ambient breathing — 0.5Hz = 2s period */
+@keyframes nodeBreath {
+  0%, 100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.05);
+    filter: brightness(1.15);
+  }
+}
+
+/* Alert pulse ring — expands and fades outward */
+@keyframes pulseRing {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+    stroke-width: 3;
+  }
+  100% {
+    transform: scale(2.8);
+    opacity: 0;
+    stroke-width: 0.5;
+  }
+}
+
+/* CSS-based pulse ring for DOM elements */
+@keyframes pulseRingDOM {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+    box-shadow: 0 0 0 0 var(--critical-glow);
+  }
+  70% {
+    transform: scale(1);
+    opacity: 0.4;
+    box-shadow: 0 0 0 20px transparent;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0;
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+/* Flow dot traveling along an SVG path */
+@keyframes flowDot {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 1;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+
+/* Event stream slide-in */
+@keyframes streamSlide {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+    max-height: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+    max-height: 120px;
+  }
+}
+
+/* Alert overlay slides up from bottom */
+@keyframes alertSlideUp {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Governance panel slides in from right */
+@keyframes governanceSlideIn {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Scanline CRT aesthetic */
+@keyframes scanline {
+  0% {
+    transform: translateY(-100vh);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+/* Number counter roll */
+@keyframes numberRoll {
+  0% {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Blink for indicators */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+/* Glow pulse for status indicators */
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 4px var(--safe), 0 0 8px var(--safe-glow);
+  }
+  50% {
+    box-shadow: 0 0 8px var(--safe), 0 0 20px var(--safe-glow), 0 0 40px rgba(0, 200, 150, 0.2);
+  }
+}
+
+/* Alert glow pulse */
+@keyframes alertGlowPulse {
+  0%, 100% {
+    box-shadow: 0 0 6px var(--critical), 0 0 12px var(--critical-glow);
+  }
+  50% {
+    box-shadow: 0 0 12px var(--critical), 0 0 30px var(--critical-glow), 0 0 60px rgba(229, 62, 62, 0.3);
+  }
+}
+
+/* Progress bar shimmer */
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* Dash flow for edges */
+@keyframes dashFlow {
+  from {
+    stroke-dashoffset: 100;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Critical node shake */
+@keyframes criticalShake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+  20%, 40%, 60%, 80% { transform: translateX(2px); }
+}
+
+/* ─── Base Styles ────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--text-ui);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#__next,
+main {
+  width: 100%;
+  height: 100%;
+}
+
+/* ─── Scanline Overlay ───────────────────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* Scanline sweep */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(0, 200, 150, 0.015),
+    transparent
+  );
+  animation: scanline 8s linear infinite;
+  pointer-events: none;
+  z-index: 9997;
+}
+
+/* ─── Typography Utilities ───────────────────────────────────────────────── */
+.font-data {
+  font-family: 'DM Mono', monospace;
+}
+
+.font-prose {
+  font-family: 'Instrument Serif', serif;
+}
+
+.font-ui {
+  font-family: 'Inter', sans-serif;
+}
+
+/* ─── Scrollbar Styling ──────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-active);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--neutral);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-active) var(--bg);
+}
+
+/* ─── Panel Components ───────────────────────────────────────────────────── */
+.panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* ─── Status Badges ──────────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: 2px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.badge-safe {
+  background: var(--safe-dim);
+  color: var(--safe);
+  border: 1px solid rgba(0, 200, 150, 0.3);
+}
+
+.badge-warning {
+  background: var(--warning-dim);
+  color: var(--warning);
+  border: 1px solid rgba(245, 166, 35, 0.3);
+}
+
+.badge-critical {
+  background: var(--critical-dim);
+  color: var(--critical);
+  border: 1px solid rgba(229, 62, 62, 0.3);
+  animation: alertGlowPulse 2s ease-in-out infinite;
+}
+
+/* ─── Button Styles ──────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+.btn:hover {
+  border-color: var(--safe);
+  color: var(--safe);
+  background: var(--safe-dim);
+}
+
+.btn-primary {
+  border-color: var(--safe);
+  color: var(--safe);
+  background: var(--safe-dim);
+}
+
+.btn-primary:hover {
+  background: rgba(0, 200, 150, 0.25);
+  box-shadow: 0 0 12px var(--safe-glow);
+}
+
+.btn-critical {
+  border-color: var(--critical);
+  color: var(--critical);
+  background: var(--critical-dim);
+}
+
+/* ─── Section Headers ────────────────────────────────────────────────────── */
+.section-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ─── Data Grid ──────────────────────────────────────────────────────────── */
+.data-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+}
+
+.data-cell {
+  background: var(--bg-panel);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.data-cell-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.data-cell-value {
+  font-family: 'DM Mono', monospace;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1;
+  animation: numberRoll 0.3s ease;
+}
+
+.data-cell-value.safe { color: var(--safe); }
+.data-cell-value.warning { color: var(--warning); }
+.data-cell-value.critical { color: var(--critical); }
+
+/* ─── Separator ──────────────────────────────────────────────────────────── */
+.separator {
+  height: 1px;
+  background: var(--border);
+  width: 100%;
+}
+
+/* ─── Live indicator ─────────────────────────────────────────────────────── */
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--safe);
+  animation: blink 1.2s ease-in-out infinite;
+  box-shadow: 0 0 6px var(--safe-glow);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.alert-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--critical);
+  animation: blink 0.6s ease-in-out infinite;
+  box-shadow: 0 0 8px var(--critical-glow);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* ─── Highlight overrides ────────────────────────────────────────────────── */
+::selection {
+  background: var(--safe-dim);
+  color: var(--safe);
+}
