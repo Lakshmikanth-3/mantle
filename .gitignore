@@ -1,0 +1,12 @@
+node_modules/
+.next
+build
+dist
+.env
+.gemini
+artifacts
+cache
+typechain-types
+*.tar.gz
+push.js
+push2.js
