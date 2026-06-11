@@ -66,7 +66,7 @@ function Navbar() {
           </a>
         ))}
         <a
-          href="/monitor"
+          href="http://localhost:3005/monitor"
           target="_blank"
           rel="noreferrer"
           style={{
@@ -203,7 +203,7 @@ function Hero() {
         {/* CTA buttons */}
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
           <a
-            href="/monitor"
+            href="http://localhost:3005/monitor"
             target="_blank"
             rel="noreferrer"
             style={{
