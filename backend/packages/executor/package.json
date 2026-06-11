@@ -1,0 +1,20 @@
+{
+  "name": "@sentinel/executor",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "viem": "^2.10.0",
+    "eventemitter3": "^5.0.1",
+    "dotenv": "^16.4.5",
+    "axios": "^1.7.2"
+  },
+  "devDependencies": {
+    "tsx": "^4.11.0",
+    "typescript": "^5.4.5",
+    "@types/node": "^20.12.0"
+  }
+}
