@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Alert {
+  id                String   @id @default(uuid())
+  protocol          String
+  protocolAddress   String
+  type              String
+  detectedAt        Int
+  amount            String
+  estimatedUSD      Float
+  mantleExposureUSD Float
+  zkProofHash       String?
+  createdAt         DateTime @default(now())
+}
+
+model PendingMint {
+  guid            String   @id
+  protocol        String
+  protocolAddress String
+  amount          String
+  blockNumber     String
+  detectedAt      Int
+  sourceBurnFound Boolean  @default(false)
+  createdAt       DateTime @default(now())
+}

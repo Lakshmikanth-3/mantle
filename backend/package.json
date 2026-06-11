@@ -1,0 +1,29 @@
+{
+  "name": "sentinel",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Autonomous DeFi risk oracle and governance agent on Mantle Network",
+  "private": true,
+  "packageManager": "pnpm@9.0.0",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n watcher,alertmgr,governance,oracle,prover,indexer,monitor -c cyan,yellow,magenta,blue,green,white,red \"pnpm -F watcher dev\" \"pnpm -F alertmanager dev\" \"pnpm -F governance dev\" \"pnpm -F oracle dev\" \"pnpm -F prover dev\" \"pnpm -F indexer dev\" \"pnpm -F monitor dev\"",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "contracts:deploy:sepolia": "pnpm -F contracts deploy:sepolia",
+    "contracts:deploy:mainnet": "pnpm -F contracts deploy:mainnet",
+    "type-check": "pnpm -r type-check"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "ethers": "^6.16.0",
+    "typescript": "^5.4.5",
+    "vitest": "^4.1.8"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "viem": "^2.10.0"
+  }
+}
