@@ -1,0 +1,10 @@
+{
+  "network": "mantleSepolia",
+  "chainId": "5003",
+  "deployer": "0x306037A2FdE5e44C0bd2f017BfC4fDB3Cd0bAa1D",
+  "deployedAt": "2026-06-03T18:27:32.752Z",
+  "SentinelBatchVerifier": "0x5846A5c595a5e45dB63E90C76181B6a3DBD35816",
+  "ERC8004IdentityRegistry": "0xbB09dcD84C40D9c4A6a860034a0a3560D65c82D7",
+  "ERC8004ReputationRegistry": "0x02807Be6d2B2934C677A448c011404497a814cA2",
+  "ERC8004ValidationRegistry": "0x40B911469639b166907536aDdD930a4BAA5ea4bF"
+}

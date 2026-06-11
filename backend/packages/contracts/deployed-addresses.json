@@ -1,0 +1,8 @@
+{
+  "network": "mantleSepolia",
+  "chainId": "5003",
+  "deployer": "0x306037A2FdE5e44C0bd2f017BfC4fDB3Cd0bAa1D",
+  "deployedAt": "2026-06-03T10:55:20.014Z",
+  "SentinelCore": "0x38E0D4468Afdd12776b7D371166edED8E9522054",
+  "SentinelLedger": "0x669cA0Be3B5C3CE6a8AFC3F752FF310072908a58"
+}

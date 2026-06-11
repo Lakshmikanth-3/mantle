@@ -1,0 +1,10 @@
+{
+  "network": "mantleSepolia",
+  "chainId": 5003,
+  "deployer": "0x306037A2FdE5e44C0bd2f017BfC4fDB3Cd0bAa1D",
+  "deployedAt": "2026-06-11T16:41:29.876Z",
+  "rsETH": "0x12e1fB80E8b098DF102f81379e2e88B9d447dA60",
+  "mETH": "0x15e9b20b9500E3456589c8D8Bf37f71845017d7E",
+  "USDY": "0x968783345F6E3DB2e2BaDFf3A13aa5f5dC07ddE4",
+  "xStocks": "0xE5f52fE7E30db79a1465e38AF53644B420b3Be37"
+}

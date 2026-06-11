@@ -1,0 +1,19 @@
+{
+  "name": "@sentinel/contracts",
+  "version": "1.0.0",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:sepolia": "hardhat run scripts/deploy.ts --network mantleSepolia",
+    "deploy:mainnet": "hardhat run scripts/deploy.ts --network mantleMainnet",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@openzeppelin/contracts": "^5.0.2",
+    "hardhat": "^2.22.3",
+    "typescript": "^5.4.5",
+    "ts-node": "^10.9.2",
+    "@types/node": "^20.12.0"
+  }
+}
