@@ -1,42 +1,61 @@
 # SENTINEL
 
-An autonomous AI agent that detects cross-chain bridge exploits on Mantle in seconds, automatically drafts governance proposals to mitigate treasury risk, and sells validated risk data via x402 micro-payments.
+**Mantle Turing Test Hackathon 2026 Submission**
 
-## Architecture
+SENTINEL is a fully autonomous AI agent that continuously monitors cross-chain bridges on the Mantle network. By mathematically validating cross-chain invariants (e.g. `minted == burned`) in real-time, it detects exploits within seconds of them occurring—long before human teams can react. When a systemic threat is detected, SENTINEL instantly drafts a Mantle Governance Proposal (MIP) to defensively reposition the Mantle Treasury and automatically executes pre-authorized smart contract actions to minimize collateral damage.
+
+Beyond emergency response, SENTINEL operates as a self-sustaining public good. It acts as an ERC-8004 Risk Oracle, selling its ZK-proven risk assessments to other AI agents and protocols via x402 micro-payments, using the revenue to fund its own gas costs.
+
+## Architecture Diagram
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000', 'tertiaryColor': '#ffffff', 'secondaryColor': '#ffffff', 'mainBkg': '#ffffff'}}}%%
 graph TD
-    A[Mantle Network] -->|New Block Events| B(Watcher / Invariant Checker)
-    B -->|Anomaly| C(Alert Manager)
-    C -->|Critical Violation| D[Governance LLM Engine]
-    C -->|Alert| E[Telegram / Frontend]
-    D -->|MIP Draft| F[Mantle Forum]
+    classDef default fill:#ffffff,stroke:#000000,stroke-width:2px,color:#000000;
+    classDef highlight fill:#f9f9f9,stroke:#000000,stroke-width:2px,color:#000000;
+
+    A[Mantle Network RPC] -->|Block Streams| B(Watcher / Invariant Checker)
+    B -->|Logs & Alerts| C(Alert Manager)
     
-    B -->|ZK Proofs| G[ERC-8004 Registry]
-    H[Agent/Client] -->|x402 Payment| I(Risk Oracle API)
-    I -->|Query| G
+    C -->|High Risk Detected| D[Governance LLM Engine]
+    C -->|Critical Violation| E[Executor Engine]
+    
+    D -->|Auto-Drafts| F[Mantle Forum MIP Proposal]
+    E -->|Defensive Action| G[Byreal CLMM / Super Portal]
+    
+    B -->|ZK Proofs| H[ERC-8004 Validation Registry]
+    I[Third-Party Agents] -->|x402 Micro-payments| J(Risk Oracle HTTP API)
+    J -->|Serves Score| H
+    
+    class A,B,C,D,E,F,G,H,I,J default;
 ```
 
 ## Exploit Response Workflow
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryBorderColor': '#000000', 'primaryTextColor': '#000000', 'lineColor': '#000000', 'tertiaryColor': '#ffffff', 'secondaryColor': '#ffffff', 'mainBkg': '#ffffff'}}}%%
 sequenceDiagram
-    participant Attacker
-    participant Bridge
-    participant SENTINEL
-    participant MantleForum
+    participant A as Attacker
+    participant B as Bridge Contract
+    participant S as SENTINEL
+    participant G as Governance / Treasury
     
-    Attacker->>Bridge: 1. Forged Mint (No Source Burn)
-    Bridge-->>SENTINEL: 2. Block Emitted
-    SENTINEL->>SENTINEL: 3. Verify Invariant (Burn == Mint)
-    SENTINEL-->>SENTINEL: 4. Mismatch Detected!
-    SENTINEL->>MantleForum: 5. Auto-Draft MIP Governance Proposal
-    SENTINEL->>SENTINEL: 6. Execute Defensive Treasury Rebalance
+    A->>B: 1. Exploit: Forge Mint on Destination
+    B-->>S: 2. Block Emitted on Mantle
+    S->>S: 3. Verify Invariant (Burn == Mint)
+    S-->>S: 4. Mismatch Detected! (Zero Burn)
+    S->>G: 5. Auto-Draft MIP Governance Proposal
+    S->>B: 6. Execute Defensive Treasury Rebalance
 ```
 
 ## Getting Started
-1. Run backend: `cd backend && pnpm dev`
-2. Run frontend: `cd frontend && pnpm dev`
-3. View Monitor: `http://localhost:3000`
+
+1. **Start the Backend Infrastructure:**
+   ```bash
+   cd backend
+   pnpm dev
+   ```
+2. **Start the Frontend Threat Map:**
+   ```bash
+   cd frontend
+   pnpm dev
+   ```
+3. **View the Dashboard:** Open `http://localhost:3000`
