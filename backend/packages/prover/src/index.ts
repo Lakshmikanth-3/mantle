@@ -1,10 +1,8 @@
-import { exec } from 'child_process';
-import util from 'util';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
 import { fileURLToPath } from 'url';
-
-const execAsync = util.promisify(exec);
+// @ts-ignore — snarkjs ships CJS, import works fine at runtime
+import snarkjs from 'snarkjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const buildDir = path.resolve(__dirname, '../build');
@@ -17,31 +15,38 @@ export interface ZKProofResult {
 
 /**
  * Generates a real Groth16 ZK proof using SnarkJS for the invariant violation.
+ * All circuit artifacts (WASM + zkey) are pre-compiled in build/.
  */
 export async function generateInvariantProof(inputData: any): Promise<ZKProofResult> {
-  const inputPath = path.join(buildDir, `input_${Date.now()}.json`);
-  const proofPath = path.join(buildDir, `proof_${Date.now()}.json`);
-  const publicPath = path.join(buildDir, `public_${Date.now()}.json`);
-  const calldataPath = path.join(buildDir, `calldata_${Date.now()}.txt`);
+  const timestamp = Date.now();
+  const proofPath = path.join(buildDir, `proof_${timestamp}.json`);
+  const publicPath = path.join(buildDir, `public_${timestamp}.json`);
 
   try {
-    // Write input JSON
-    fs.writeFileSync(inputPath, JSON.stringify(inputData, null, 2));
+    console.log('[prover] Generating real Groth16 ZK proof...');
 
-    console.log('[prover] Bypassing 15+ minute SNARK computation for local testing...');
-    
-    // Simulate a short 3-second delay for UI effect
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    // Generate witness + proof in one call — fully in-process, no exec() needed
+    const { proof, publicSignals } = await snarkjs.groth16.fullProve(
+      inputData,
+      wasmPath,
+      zkeyPath
+    );
 
-    // Return mock encoded calldata
-    const mockCalldata = "0x00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001" as `0x${string}`;
+    console.log(`[prover] Proof generated. Public signals: ${JSON.stringify(publicSignals)}`);
 
-    return { proofCalldata: mockCalldata };
+    // Export Solidity-compatible calldata (ABI-encoded a,b,c + input array)
+    const rawCalldata: string = await snarkjs.groth16.exportSolidityCallData(proof, publicSignals);
+
+    // rawCalldata is already hex-encoded and comma-separated into a,b,c,input
+    // Encode as a single bytes32 hash for the on-chain registry submission
+    // The SentinelCore contract expects bytes calldata — we pass the full ABI-encoded proof
+    const proofCalldata = ('0x' + Buffer.from(rawCalldata).toString('hex')) as `0x${string}`;
+
+    return { proofCalldata };
   } finally {
-    // Cleanup temporary files
-    if (fs.existsSync(inputPath)) fs.unlinkSync(inputPath);
+    // Cleanup temp files if they were written to disk by snarkjs internals
     if (fs.existsSync(proofPath)) fs.unlinkSync(proofPath);
     if (fs.existsSync(publicPath)) fs.unlinkSync(publicPath);
-    if (fs.existsSync(calldataPath)) fs.unlinkSync(calldataPath);
   }
 }
+

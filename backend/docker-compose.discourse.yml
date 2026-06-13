@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  discourse-postgresql:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=bn_discourse
+      - POSTGRES_PASSWORD=bitnami
+      - POSTGRES_DB=bitnami_discourse
+    volumes:
+      - 'discourse_postgresql_data:/var/lib/postgresql/data'
+
+  discourse-redis:
+    image: redis:7-alpine
+    volumes:
+      - 'discourse_redis_data:/data'
+
+  discourse:
+    image: bitnamilegacy/discourse:3
+    ports:
+      - '8080:3000'
+    environment:
+      - DISCOURSE_DATABASE_HOST=discourse-postgresql
+      - DISCOURSE_DATABASE_USER=bn_discourse
+      - DISCOURSE_DATABASE_PASSWORD=bitnami
+      - DISCOURSE_DATABASE_NAME=bitnami_discourse
+      - DISCOURSE_REDIS_HOST=discourse-redis
+      - DISCOURSE_HOST=127.0.0.1
+      - DISCOURSE_PORT_NUMBER=8080
+      # Auto-create an admin account so you can login immediately
+      - DISCOURSE_USERNAME=sentinel_admin
+      - DISCOURSE_PASSWORD=SentinelHackathon2024!
+      - DISCOURSE_EMAIL=admin@example.com
+      # Dummy SMTP settings to prevent startup errors
+      - DISCOURSE_SMTP_HOST=smtp.gmail.com
+      - DISCOURSE_SMTP_PORT=587
+      - DISCOURSE_SMTP_USER=dummy
+      - DISCOURSE_SMTP_PASSWORD=dummy
+      - DISCOURSE_SMTP_PROTOCOL=tls
+    volumes:
+      - 'discourse_data:/bitnami/discourse'
+    depends_on:
+      - discourse-postgresql
+      - discourse-redis
+
+volumes:
+  discourse_postgresql_data:
+  discourse_redis_data:
+  discourse_data:
